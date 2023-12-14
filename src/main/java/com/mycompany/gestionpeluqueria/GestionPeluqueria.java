@@ -1,25 +1,29 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-
+//Paquete de clases del proyecto
 package com.mycompany.gestionpeluqueria;
 
 /**
  *
  * @author Luis
  */
+//Importaciones de clases de librerias Java
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-
+import org.junit.Test;
+import static org.junit.Assert.*;
+//Clase que representa el servicio de peluqueria
 class ServicioPeluqueria {
     private final String nombre;
     private final double precio;
-
+    //Constructor para inicializar un servicio
     public ServicioPeluqueria(String nombre, double precio) {
         this.nombre = nombre;
         this.precio = precio;
     }
-
+    //Metodos de obtención del nombre y precio del servicio
     public String getNombre() {
         return nombre;
     }
@@ -27,24 +31,24 @@ class ServicioPeluqueria {
     public double getPrecio() {
         return precio;
     }
-
+    //Metodo para representar el servicio como cadena de texto
     @Override
     public String toString() {
         return "Servicio: " + nombre + ", Precio: $" + precio;
     }
 }
-
+//Clase que representa la cita en la peluqueria
 class Cita {
     private final String cliente;
     private final String servicio;
     private final String hora;
-
+    //Constructor de inicialización de la cita
     public Cita(String cliente, String servicio, String hora) {
         this.cliente = cliente;
         this.servicio = servicio;
         this.hora = hora;
     }
-
+    //Metodos para obtener el cliente, servicio y hora de la cita
     public String getCliente() {
         return cliente;
     }
@@ -56,28 +60,32 @@ class Cita {
     public String getHora() {
         return hora;
     }
-
+    //Metodo para representar la cita como cadena de texto
     @Override
     public String toString() {
         return "Cliente: " + cliente + ", Servicio: " + servicio + ", Hora: " + hora;
     }
 }
-
+//Clase principal encargada de gestionar la peluqueria
 public class GestionPeluqueria {
     private final ArrayList<ServicioPeluqueria> servicios;
     private final ArrayList<Cita> citas;
-
+    //Constructor para inicializar las listas de servicios
     public GestionPeluqueria() {
         servicios = new ArrayList<>();
         citas = new ArrayList<>();
     }
-
+    //Metodo para obtener la lista de servicios
+     public List<ServicioPeluqueria> getServicios() {
+        return servicios;
+    }
+     //Metodo que permite agregar un nuevo servicio
     public void agregarServicio(String nombre, double precio) {
         ServicioPeluqueria nuevoServicio = new ServicioPeluqueria(nombre, precio);
         servicios.add(nuevoServicio);
         System.out.println("Servicio agregado: " + nuevoServicio);
     }
-
+    //Metodo para mostrar la lista de los servicios
     public void mostrarServicios() {
         if (servicios.isEmpty()) {
             System.out.println("No hay servicios registrados.");
@@ -88,13 +96,20 @@ public class GestionPeluqueria {
             }
         }
     }
-
+    // Método que permite programar una cita
     public void programarCita(String cliente, String servicio, String hora) {
+        // Verificar si el servicio especificado existe en la lista de servicios
+        boolean servicioExistente = servicios.stream().anyMatch(s -> s.getNombre().equalsIgnoreCase(servicio));
+        if (!servicioExistente) {
+            System.out.println("No es posible programar la cita. El servicio '" + servicio + "' no está disponible.");
+        return; // Salir del método si el servicio no está disponible
+    }
+        // Si el servicio existe, proceder con la programación de la cita
         Cita nuevaCita = new Cita(cliente, servicio, hora);
         citas.add(nuevaCita);
         System.out.println("Cita programada exitosamente: " + nuevaCita);
-    }
-
+}
+    //Metodo que muestra la lista de citas programadas
     public void mostrarCitas() {
         if (citas.isEmpty()) {
             System.out.println("No hay citas programadas.");
@@ -105,11 +120,11 @@ public class GestionPeluqueria {
             }
         }
     }
-
+    //Metodo principal para la ejecución del programa
     public static void main(String[] args) {
         GestionPeluqueria gestionPeluqueria = new GestionPeluqueria();
         Scanner scanner = new Scanner(System.in);
-
+        //Bucle que muestra el menú principal
         while (true) {
             System.out.println("\nMenu Principal:");
             System.out.println("1. Agregar servicio de peluquería");
@@ -121,7 +136,7 @@ public class GestionPeluqueria {
 
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea después del número
-
+            //Switch de manejo de opciones del menu
             switch (opcion) {
                 case 1:
                     System.out.print("Ingrese el nombre del nuevo servicio: ");
@@ -153,4 +168,60 @@ public class GestionPeluqueria {
             }
         }
     }
+    //Metodo que permite la comprobación de tests del programa mediante JUnit
+    public class TestGestionPeluqueria {
+    // Método de prueba para comprobar la funcionalidad de agregarServicio
+    @Test
+    public void testAgregarServicio() {
+        GestionPeluqueria gestionPeluqueria = new GestionPeluqueria();
+
+        // Caso de prueba 1
+        gestionPeluqueria.agregarServicio("Corte de Pelo", 20.0);
+        assertEquals(1, gestionPeluqueria.getServicios().size());
+        assertEquals("Corte de Pelo", gestionPeluqueria.getServicios().get(0).getNombre());
+        assertEquals(20.0, gestionPeluqueria.getServicios().get(0).getPrecio(), 0.01);
+
+        // Caso de prueba 2
+        gestionPeluqueria.agregarServicio("Lavado de Cabello", 15.0);
+        assertEquals(2, gestionPeluqueria.getServicios().size());
+        assertEquals("Lavado de Cabello", gestionPeluqueria.getServicios().get(1).getNombre());
+        assertEquals(15.0, gestionPeluqueria.getServicios().get(1).getPrecio(), 0.01);
+    }
+
+}
+    public class PerformanceTests {
+
+    @Test
+    public void testAgregarServiciosRendimiento() {
+        GestionPeluqueria gestionPeluqueria = new GestionPeluqueria();
+
+        // Medir el tiempo necesario para agregar 1000 servicios
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 1000; i++) {
+            gestionPeluqueria.agregarServicio("Servicio" + i, 10.0);
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Tiempo para agregar 1000 servicios: " + (endTime - startTime) + " milisegundos");
+    }
+
+    @Test
+    public void testProgramarCitasRendimiento() {
+        GestionPeluqueria gestionPeluqueria = new GestionPeluqueria();
+
+        // Agregar servicios para tener datos de prueba
+        for (int i = 0; i < 1000; i++) {
+            gestionPeluqueria.agregarServicio("Servicio" + i, 10.0);
+        }
+
+        // Medir el tiempo necesario para programar 1000 citas
+        long startTime = System.currentTimeMillis();
+        for (int i = 0; i < 1000; i++) {
+            gestionPeluqueria.programarCita("Cliente" + i, "Servicio" + i, "10:00 AM");
+        }
+        long endTime = System.currentTimeMillis();
+
+        System.out.println("Tiempo para programar 1000 citas: " + (endTime - startTime) + " milisegundos");
+    }
+}
 }
