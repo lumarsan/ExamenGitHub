@@ -61,10 +61,12 @@ class Cita {
         return hora;
     }
     //Metodo para representar la cita como cadena de texto
-    @Override
-    public String toString() {
-        return "Cliente: " + cliente + ", Servicio: " + servicio + ", Hora: " + hora;
-    }
+   @Override
+public String toString() {
+    return "Cita{cliente='" + cliente + "', servicio='" + servicio + "', hora='" + hora + "'}";
+}
+
+
 }
 //Clase principal encargada de gestionar la peluqueria
 public class GestionPeluqueria {
@@ -170,6 +172,7 @@ public class GestionPeluqueria {
     }
     //Metodo que permite la comprobación de tests del programa mediante JUnit
     public class TestGestionPeluqueria {
+
     // Método de prueba para comprobar la funcionalidad de agregarServicio
     @Test
     public void testAgregarServicio() {
@@ -186,42 +189,6 @@ public class GestionPeluqueria {
         assertEquals(2, gestionPeluqueria.getServicios().size());
         assertEquals("Lavado de Cabello", gestionPeluqueria.getServicios().get(1).getNombre());
         assertEquals(15.0, gestionPeluqueria.getServicios().get(1).getPrecio(), 0.01);
-    }
-
-}
-    public class PerformanceTests {
-
-    @Test
-    public void testAgregarServiciosRendimiento() {
-        GestionPeluqueria gestionPeluqueria = new GestionPeluqueria();
-
-        // Medir el tiempo necesario para agregar 1000 servicios
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 1000; i++) {
-            gestionPeluqueria.agregarServicio("Servicio" + i, 10.0);
-        }
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("Tiempo para agregar 1000 servicios: " + (endTime - startTime) + " milisegundos");
-    }
-
-    @Test
-    public void testProgramarCitasRendimiento() {
-        GestionPeluqueria gestionPeluqueria = new GestionPeluqueria();
-
-        // Agregar servicios para tener datos de prueba
-        for (int i = 0; i < 1000; i++) {
-            gestionPeluqueria.agregarServicio("Servicio" + i, 10.0);
-        }
-
-        // Medir el tiempo necesario para programar 1000 citas
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 1000; i++) {
-            gestionPeluqueria.programarCita("Cliente" + i, "Servicio" + i, "10:00 AM");
-        }
-        long endTime = System.currentTimeMillis();
-
-        System.out.println("Tiempo para programar 1000 citas: " + (endTime - startTime) + " milisegundos");
     }
 }
 }
